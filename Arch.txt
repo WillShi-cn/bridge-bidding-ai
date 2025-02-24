@@ -1,0 +1,94 @@
+
+核心模块：
+* AI叫牌法：通过机器学习，尝试生成独有的【AI叫牌法】。
+
+尽可能借助开源代码，搭建以下基础功能块：
+1. 规则模块：用于评估叫牌是否合规、计算最终得分；
+2. 牌局模块：基于【规则模块】，随机产出牌局；
+3. 叫牌模块：基于【规则模块】，根据【AI叫牌法】，模拟叫牌过程；
+4. 打牌模块：基于【牌局模块】、基于【规则模块】，根据【定约】自动计算双明牌情况下的赢墩，并计算最终得分；
+
+通过机器学习，训练、改善【AI叫牌法】：
+5. 训练：通过与通用叫牌规则对抗叫牌，产出【定约】，并通过【打牌模块】计算加权平均得分（己方得分为正，对方得分为负）。
+
+**********************
+
+
+系统架构与实现方案
+1. 技术选型
+模块	推荐技术栈	开源组件
+规则模块	Python + Endplay	endplay.types endplay.dds
+牌局模块	Endplay Dealer	endplay.dealer.generate_deal
+叫牌模块	PyTorch + Transformer	HuggingFace Transformers
+打牌模块	Endplay DDS	endplay.dds.solve_board
+训练系统	RLlib + Custom Env	Ray Framework
+
+#############
+
+核心模块实现
+1. 规则模块
+from endplay.types import Contract, Vul, Penalty
+
+class BridgeRules:
+    @staticmethod
+    def calculate_score(contract: Contract, tricks: int, vul: Vul) -> int:
+        """ACBL标准计分规则"""
+        if tricks >= contract.level + 6:
+            # 计算超墩得分...
+        else:
+            # 计算宕墩罚分...
+        return score
+
+    @staticmethod
+    def validate_auction(auction: list) -> bool:
+        """叫牌合规性校验"""
+        # 检查叫牌顺序合法性、禁止重复叫品等
+
+
+2. 牌局模块
+from endplay.dealer import generate_deal
+from endplay import Vul
+class DealGenerator:
+    def __init__(self):
+        self.vul_rotator = [Vul.none, Vul.ns, Vul.ew, Vul.all]
+    
+    def generate(self, dealer: str) -> dict:
+        """生成带局况的随机牌局"""
+        deal = generate_deal()
+        return {
+            "pbn": deal.to_pbn(),
+            "dealer": dealer,
+            "vul": self.vul_rotator[random.randint(0,3)],
+            "hands": deal.players
+        }
+3. 叫牌模块（AI核心）
+import torch
+from transformers import GPT2Config, GPT2Model
+class BiddingGPT(torch.nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.config = GPT2Config(vocab_size=38, n_positions=40)
+        self.transformer = GPT2Model(self.config)
+        self.hand_encoder = torch.nn.Sequential(
+            torch.nn.Linear(52, 128),  # 每张牌是否存在
+            torch.nn.ReLU()
+        )
+    
+    def forward(self, auction_tokens, hand_features):
+        # 输入: 叫牌序列token + 手牌特征
+        combined = torch.cat([self.hand_encoder(hand_features), 
+                            self.transformer(auction_tokens).last_hidden_state], dim=1)
+        return torch.softmax(combined, dim=-1)
+4. 打牌模块
+from endplay.dds import solve_board
+class PlaySimulator:
+    def __init__(self):
+        self.dds_cache = {}
+    
+    def simulate(self, pbn: str, contract: Contract) -> float:
+        """双明手最优结果得分计算"""
+        if pbn not in self.dds_cache:
+            deal = Deal(pbn)
+            self.dds_cache[pbn] = solve_board(deal)
+        tricks = self.dds_cache[pbn][contract.declarer]
+        return BridgeRules.calculate_score(contract, tricks, deal.vul)

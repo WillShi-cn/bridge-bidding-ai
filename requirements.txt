@@ -1,0 +1,19 @@
+# 桥牌规则引擎
+endplay>=0.5.11
+python-dateutil>=2.8.2  # endplay的依赖项
+
+# 基础依赖
+numpy>=2.2.3
+pandas>=2.2.3
+torch>=1.9.0
+transformers>=4.18.0
+python-dotenv>=1.0.1
+requests>=2.26.0
+scikit-learn>=1.0.1
+scipy>=1.7.3
+tqdm>=4.62.3
+
+
+# 开发工具
+black>=25.1.0
+pytest>=8.3.4

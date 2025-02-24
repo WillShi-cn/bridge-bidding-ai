@@ -1,0 +1,12 @@
+{
+    "Bridge Class": {
+        "prefix": "bridgecls",
+        "body": [
+            "class ${1:ClassName}:",
+            "    def __init__(self):",
+            "        pass\n",
+            "    def ${2:method}(self):",
+            "        ${3:pass}"
+        ]
+    }
+}

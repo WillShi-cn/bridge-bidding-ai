@@ -1,0 +1,67 @@
+// .vscode/settings.json
+{
+  // ========== 核心Python配置 ========== //
+  "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+  "python.analysis.typeCheckingMode": "strict", // 增强类型检查（需Pylance）
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportUnusedImport": "warning", // 桥牌项目需要清晰模块结构
+    "reportMissingImports": "error"
+  },
+  // ========== 虚拟环境管理 ========== //
+  "python.terminal.activateEnvironment": true,
+  "python.venvPath": "${workspaceFolder}/.venv",
+  "python.venvFolders": [
+    ".venv"
+  ],
+  // ========== 测试与调试配置 ========== //
+  "python.testing.pytestEnabled": true,
+  "python.testing.pytestArgs": [
+    "-v", // 详细输出
+    "--cov=core" // 覆盖core模块（桥牌核心逻辑）
+  ],
+  "debugpy.allowRemoteDebugging": true,
+  // ========== 代码质量保障 ========== //
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "black",
+  "python.formatting.blackArgs": [
+    "--line-length=88"
+  ],
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": false, // 推荐禁用（与Pylance配合更好）
+  "python.linting.flake8Enabled": true, // 启用Flake8检查
+  "flake8.ignore": [
+    "E501"
+  ], // 允许行长超过88（Black会处理）
+  // ========== 文件排除规则 ========== //
+  "search.exclude": {
+    "**/node_modules": true,
+    "models/**/*.pt": true // 排除训练好的模型文件
+  },
+  // ========== 桥牌专用优化 ========== //
+  "jupyter.notebookFileRoot": "${workspaceFolder}/notebooks", // 数据分析目录
+  "files.associations": {
+    "*.bbo": "plaintext" // 桥牌Base格式文件识别
+  },
+  // ========== 团队协作配置 ========== //
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  // ========== 高级调试配置 ========== //
+  "launch": {
+    "configurations": [
+      {
+        "name": "桥牌叫牌调试",
+        "type": "debugpy",
+        "request": "launch",
+        "program": "${workspaceFolder}/core/bidding/validator.py",
+        "args": [
+          "--hand",
+          "SAKQ H32 D987 CAQJ"
+        ], // 调试指定手牌
+        "console": "integratedTerminal"
+      }
+    ]
+  }
+}

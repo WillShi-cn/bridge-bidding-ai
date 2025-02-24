@@ -1,0 +1,8 @@
+﻿# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# 桥牌数据
+*.lin
+*.pbn
