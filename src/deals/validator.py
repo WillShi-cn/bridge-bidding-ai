@@ -5,18 +5,21 @@ from probability_cache import NORMAL_SHAPES, NORMAL_HCPS
 from evaluate import evaluate_north_hand
 from collections import defaultdict
 
+HCP_INDEX_MAP = {hcp: i + 1 for i, hcp in enumerate(NORMAL_HCPS.keys())}
+SHAPE_INDEX_MAP = {shape: i + 1 for i, shape in enumerate(NORMAL_SHAPES.keys())}
+
 class Validator:
     def __init__(self):
         self.count = 0
         self.hcp_total = defaultdict(int)
         self.shape_total = defaultdict(int)
         # 提前构建反向映射字典
-        self.hcp_index_map = {hcp: i + 1 for i, hcp in enumerate(NORMAL_HCPS.keys())}
-        self.shape_index_map = {shape: i + 1 for i, shape in enumerate(NORMAL_SHAPES.keys())}
+        self.hcp_index_map = HCP_INDEX_MAP
+        self.shape_index_map = SHAPE_INDEX_MAP
         self.indicator = 1.2
 
-    def validate(self, hand):
-        hcp, shape = evaluate_north_hand(hand)
+    def validate(self, deal):
+        hcp, shape = evaluate_north_hand(deal)
         # 使用反向映射字典查找索引
         hcp_index = self.hcp_index_map.get(hcp, 0)
         shape_index = self.shape_index_map.get(shape, 0)
