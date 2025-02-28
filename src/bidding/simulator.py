@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from typing import List, Dict
-from src.rules.core import BiddingRuleEngine
+from src.bidding.rule import BiddingRuleEngine
 
 class BiddingSimulator:
     def __init__(self, rule_engine: BiddingRuleEngine):
@@ -20,13 +20,9 @@ class BiddingSimulator:
     
     def _is_auction_ended(self, auction: List[str]) -> bool:
         """Check auction termination conditions"""
-        if not auction or auction[-1] != 'Pass':
+        if not auction or auction[-1] != 'Pass' or auction[-2] != 'Pass' or auction[-3] != 'Pass':
             return False
-        
-        if len(auction) == 4 and all(b == 'Pass' for b in auction):
-            return True
-        
-        return len(auction) >= 3 and all(b == 'Pass' for b in auction[-3:])
+        return len(auction) >= 4
     
     def _generate_bid(self, auction: List[str], deal: Dict) -> str:
         """Generate next bid (AI placeholder)"""

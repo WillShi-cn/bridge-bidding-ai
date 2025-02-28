@@ -1,9 +1,9 @@
-# src.rules.core.py
+# src/rules/rule.py
 # -*- coding: utf-8 -*-
 
 class BiddingRuleEngine:
     # 二分为普通叫品和特殊叫品
-    ORDINARY_BID_RANK = {
+    CONTRACT_BID_RANK = {
         '1C':1, '1D':2, '1H':3, '1S':4, '1NT':5,
         '2C':6, '2D':7, '2H':8, '2S':9, '2NT':10,
         '3C':11, '3D':12, '3H':13, '3S':14, '3NT':15,
@@ -29,7 +29,7 @@ class BiddingRuleEngine:
                 None
             )
             return (last_ordinary is None) or (
-                self.ORDINARY_BID_RANK[new_bid] > self.ORDINARY_BID_RANK[last_ordinary]
+                self.CONTRACT_BID_RANK[new_bid] > self.CONTRACT_BID_RANK[last_ordinary]
             )
         
         # Handle special bids (X/XX)

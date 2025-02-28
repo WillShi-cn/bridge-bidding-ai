@@ -1,7 +1,8 @@
 # main.py
 # -*- coding: utf-8 -*-
 
-from src.rules.core import BiddingRuleEngine
+from probability_cache import get_normal_shapes, get_normal_hcps
+from src.bidding.rule import BiddingRuleEngine
 from src.deals.generator import generate_random_deal
 from src.bidding.simulator import BiddingSimulator
 
@@ -21,3 +22,12 @@ if __name__ == "__main__":
     
     final_auction = simulator.simulate(test_deal)
     print("\nAuction Sequence:", " → ".join(final_auction))
+
+
+
+#########
+    denom: str   # 庄家方位 (N/E/S/W)
+    # 确定庄家
+    positions = ['N', 'E', 'S', 'W']
+    declarer = positions[(positions.index(opener.upper()) + auction.index(last_bid)) % 4]
+    

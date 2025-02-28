@@ -1,18 +1,9 @@
-# src.deals.generator.py
+# src/deals/generator.py
 # -*- coding: utf-8 -*-
 
-from endplay import Deal
-from typing import Dict
+from endplay.dealer.generate import generate_deal
+from endplay.types import Deal
 
-def generate_random_deal() -> Dict[str, str]:
-    """Generate random bridge deal with string representation"""
-    deal = Deal()
-    deal.shuffle()
-    return {
-        'north': deal.north.str(),  # Convert to string
-        'east': deal.east.str(),
-        'south': deal.south.str(),
-        'west': deal.west.str()
-    }
-
-# deal.north 什么意思？
+# 随机生成一副牌
+deal = generate_deal()
+print(deal)
